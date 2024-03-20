@@ -260,9 +260,9 @@ def iterable_to_str(iterable):
 def verify_str_arg(value, arg=None, valid_values=None, custom_msg=None):
     if not isinstance(value, torch._six.string_classes):
         if arg is None:
-            msg = "Expected type str, but got type {type}."
+            msg = "Expected type_ str, but got type_ {type_}."
         else:
-            msg = "Expected type str for argument {arg}, but got type {type}."
+            msg = "Expected type_ str for argument {arg}, but got type_ {type_}."
         msg = msg.format(type=type(value), arg=arg)
         raise ValueError(msg)
 

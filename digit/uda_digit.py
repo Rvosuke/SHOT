@@ -138,7 +138,7 @@ def cal_acc(loader, netF, netB, netC):
                 all_label = torch.cat((all_label, labels.float()), 0)
     _, predict = torch.max(all_output, 1)
     accuracy = torch.sum(torch.squeeze(predict).float() == all_label).item() / float(all_label.size()[0])
-    mean_ent = torch.mean(loss.Entropy(nn.Softmax(dim=1)(all_output))).cpu().data.item()
+    mean_ent = torch.mean(loss.entropy(nn.Softmax(dim=1)(all_output))).cpu().data.item()
     return accuracy*100, mean_ent
 
 def train_source(args):
@@ -151,8 +151,8 @@ def train_source(args):
     elif args.dset == 's2m':
         netF = network.DTNBase().cuda()
 
-    netB = network.feat_bottleneck(type=args.classifier, feature_dim=netF.in_features, bottleneck_dim=args.bottleneck).cuda()
-    netC = network.feat_classifier(type=args.layer, class_num = args.class_num, bottleneck_dim=args.bottleneck).cuda()
+    netB = network.FeatBottleneck(type_=args.classifier, feature_dim=netF.in_features, bottleneck_dim=args.bottleneck).cuda()
+    netC = network.FeatClassifier(type=args.layer, class_num = args.class_num, bottleneck_dim=args.bottleneck).cuda()
 
     param_group = []
     learning_rate = args.lr
@@ -232,8 +232,8 @@ def test_target(args):
     elif args.dset == 's2m':
         netF = network.DTNBase().cuda()
 
-    netB = network.feat_bottleneck(type=args.classifier, feature_dim=netF.in_features, bottleneck_dim=args.bottleneck).cuda()
-    netC = network.feat_classifier(type=args.layer, class_num = args.class_num, bottleneck_dim=args.bottleneck).cuda()
+    netB = network.FeatBottleneck(type_=args.classifier, feature_dim=netF.in_features, bottleneck_dim=args.bottleneck).cuda()
+    netC = network.FeatClassifier(type=args.layer, class_num = args.class_num, bottleneck_dim=args.bottleneck).cuda()
 
     args.modelpath = args.output_dir + '/source_F.pt'   
     netF.load_state_dict(torch.load(args.modelpath))
@@ -267,8 +267,8 @@ def train_target(args):
     elif args.dset == 's2m':
         netF = network.DTNBase().cuda()
 
-    netB = network.feat_bottleneck(type=args.classifier, feature_dim=netF.in_features, bottleneck_dim=args.bottleneck).cuda()
-    netC = network.feat_classifier(type=args.layer, class_num = args.class_num, bottleneck_dim=args.bottleneck).cuda()
+    netB = network.FeatBottleneck(type_=args.classifier, feature_dim=netF.in_features, bottleneck_dim=args.bottleneck).cuda()
+    netC = network.FeatClassifier(type=args.layer, class_num = args.class_num, bottleneck_dim=args.bottleneck).cuda()
 
     args.modelpath = args.output_dir + '/source_F.pt'   
     netF.load_state_dict(torch.load(args.modelpath))
@@ -328,7 +328,7 @@ def train_target(args):
 
         if args.ent:
             softmax_out = nn.Softmax(dim=1)(outputs_test)
-            entropy_loss = torch.mean(loss.Entropy(softmax_out))
+            entropy_loss = torch.mean(loss.entropy(softmax_out))
             if args.gent:
                 msoftmax = softmax_out.mean(dim=0)
                 entropy_loss -= torch.sum(-msoftmax * torch.log(msoftmax + 1e-5))

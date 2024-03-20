@@ -6,11 +6,13 @@ import math
 import torch.nn.functional as F
 import pdb
 
-def Entropy(input_):
+
+def entropy(input_):
     bs = input_.size(0)
     entropy = -input_ * torch.log(input_ + 1e-5)
     entropy = torch.sum(entropy, dim=1)
-    return entropy 
+    return entropy
+
 
 class CrossEntropyLabelSmooth(nn.Module):
     def __init__(self, num_classes, epsilon=0.1, use_gpu=True, size_average=True):
@@ -19,10 +21,10 @@ class CrossEntropyLabelSmooth(nn.Module):
         self.epsilon = epsilon
         self.use_gpu = use_gpu
         self.size_average = size_average
-        self.logsoftmax = nn.LogSoftmax(dim=1)
+        self.log_softmax = nn.LogSoftmax(dim=1)
 
     def forward(self, inputs, targets):
-        log_probs = self.logsoftmax(inputs)
+        log_probs = self.log_softmax(inputs)
         targets = torch.zeros(log_probs.size()).scatter_(1, targets.unsqueeze(1).cpu(), 1)
         if self.use_gpu: targets = targets.cuda()
         targets = (1 - self.epsilon) * targets + self.epsilon / self.num_classes
