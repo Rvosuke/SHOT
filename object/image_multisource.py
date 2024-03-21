@@ -115,12 +115,12 @@ def test_target_srconly(args):
     netB = network.feat_bottleneck(type=args.classifier, feature_dim=netF.in_features, bottleneck_dim=args.bottleneck).cuda()
     netC = network.feat_classifier(type=args.layer, class_num = args.class_num, bottleneck_dim=args.bottleneck).cuda()
 
-    args.modelpath = args.output_dir_src + '/source_F.pt'   
-    netF.load_state_dict(torch.load(args.modelpath))
-    args.modelpath = args.output_dir_src + '/source_B.pt'   
-    netB.load_state_dict(torch.load(args.modelpath))
-    args.modelpath = args.output_dir_src + '/source_C.pt'   
-    netC.load_state_dict(torch.load(args.modelpath))
+    args.model_path = args.output_dir_src + '/source_F.pt'
+    netF.load_state_dict(torch.load(args.model_path))
+    args.model_path = args.output_dir_src + '/source_B.pt'
+    netB.load_state_dict(torch.load(args.model_path))
+    args.model_path = args.output_dir_src + '/source_C.pt'
+    netC.load_state_dict(torch.load(args.model_path))
     netF.eval()
     netB.eval()
     netC.eval()
@@ -144,12 +144,12 @@ def test_target(args):
     netB = network.feat_bottleneck(type=args.classifier, feature_dim=netF.in_features, bottleneck_dim=args.bottleneck).cuda()
     netC = network.feat_classifier(type=args.layer, class_num = args.class_num, bottleneck_dim=args.bottleneck).cuda()
 
-    args.modelpath = args.output_dir_ori + "/target_F_" + args.savename + ".pt"
-    netF.load_state_dict(torch.load(args.modelpath))
-    args.modelpath = args.output_dir_ori + "/target_B_" + args.savename + ".pt"
-    netB.load_state_dict(torch.load(args.modelpath))
-    args.modelpath = args.output_dir_ori + "/target_C_" + args.savename + ".pt"  
-    netC.load_state_dict(torch.load(args.modelpath))
+    args.model_path = args.output_dir_ori + "/target_F_" + args.savename + ".pt"
+    netF.load_state_dict(torch.load(args.model_path))
+    args.model_path = args.output_dir_ori + "/target_B_" + args.savename + ".pt"
+    netB.load_state_dict(torch.load(args.model_path))
+    args.model_path = args.output_dir_ori + "/target_C_" + args.savename + ".pt"
+    netC.load_state_dict(torch.load(args.model_path))
     netF.eval()
     netB.eval()
     netC.eval()
